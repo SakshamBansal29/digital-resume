@@ -1,0 +1,15 @@
+FROM public.ecr.aws/lambda/python:3.12
+
+# Install dependencies
+COPY requirements.txt .
+RUN pip install -r requirements.txt --target "${LAMBDA_TASK_ROOT}"
+
+# Copy your lambda handler
+COPY lambda_handler.py ${LAMBDA_TASK_ROOT}
+COPY server.py ${LAMBDA_TASK_ROOT}
+COPY context.py ${LAMBDA_TASK_ROOT}
+COPY resources.py ${LAMBDA_TASK_ROOT}
+COPY mails.py ${LAMBDA_TASK_ROOT}
+
+# Command must reference handler without .py
+CMD ["lambda_handler.handler"]

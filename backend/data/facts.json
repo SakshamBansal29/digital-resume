@@ -1,0 +1,21 @@
+{
+    "full_name": "Saksham Bansal",
+    "name": "Saksham Bansal",
+    "current_role": "Senior Data Scientist",
+    "location": "Delhi",
+    "email": "sakshambansal.ubs@gmail.com",
+    "linkedin": "linkedin.com/in/sakshambansal",
+    "years_experience": 6,
+    "education": [
+      {
+        "degree": "MBA",
+        "institution": "UBS, Panjab University, Chandigarh",
+        "year": "2021"
+      },
+      {
+        "degree": "Bachelor in Business Economics",
+        "institution": "University of Delhi",
+        "year": "2017"
+      }
+    ]
+  }
