@@ -29,6 +29,9 @@ else
   terraform workspace select "$ENVIRONMENT"
 fi
 
+export open_api_key="$OPEN_API_KEY"
+export ntfy_url="$NTFY_URL"
+
 # Use prod.tfvars for production environment
 if [ "$ENVIRONMENT" = "prod" ]; then
   TF_APPLY_CMD=(terraform apply -var-file=prod.tfvars -var="project_name=$PROJECT_NAME" -var="environment=$ENVIRONMENT" -auto-approve)
