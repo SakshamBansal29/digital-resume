@@ -24,10 +24,6 @@ terraform init -input=false \
   -backend-config="dynamodb_table=twin-terraform-locks" \
   -backend-config="encrypt=true"
 
-echo "🔑 Setting Terraform variables from environment..."
-export open_api_key="$OPEN_API_KEY"
-export ntfy_url="$NTFY_URL"
-
 
 if ! terraform workspace list | grep -q "$ENVIRONMENT"; then
   terraform workspace new "$ENVIRONMENT"
@@ -37,9 +33,9 @@ fi
 
 # Use prod.tfvars for production environment
 if [ "$ENVIRONMENT" = "prod" ]; then
-  TF_APPLY_CMD=(terraform apply -input=false -var-file=prod.tfvars -var="project_name=$PROJECT_NAME" -var="environment=$ENVIRONMENT" -auto-approve)
+  TF_APPLY_CMD=(terraform apply -input=false -var-file=prod.tfvars -var="project_name=$PROJECT_NAME" -var="environment=$ENVIRONMENT" -var="open_api_key=$OPEN_API_KEY" -var="ntfy_url=$NTFY_URL" -auto-approve)
 else
-  TF_APPLY_CMD=(terraform apply -input=false -var="project_name=$PROJECT_NAME" -var="environment=$ENVIRONMENT" -auto-approve)
+  TF_APPLY_CMD=(terraform apply -input=false -var="project_name=$PROJECT_NAME" -var="environment=$ENVIRONMENT" -var="open_api_key=$OPEN_API_KEY" -var="ntfy_url=$NTFY_URL" -auto-approve)
 fi
 
 echo "🎯 Applying Terraform..."
