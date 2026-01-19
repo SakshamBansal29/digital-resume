@@ -16,6 +16,7 @@ cd terraform
 
 AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
 AWS_REGION=${DEFAULT_AWS_REGION:-us-east-1}
+
 terraform init -input=false \
   -backend-config="bucket=twin-terraform-state-${AWS_ACCOUNT_ID}" \
   -backend-config="key=${ENVIRONMENT}/terraform.tfstate" \
@@ -23,20 +24,22 @@ terraform init -input=false \
   -backend-config="dynamodb_table=twin-terraform-locks" \
   -backend-config="encrypt=true"
 
+echo "🔑 Setting Terraform variables from environment..."
+export open_api_key="$OPEN_API_KEY"
+export ntfy_url="$NTFY_URL"
+
+
 if ! terraform workspace list | grep -q "$ENVIRONMENT"; then
   terraform workspace new "$ENVIRONMENT"
 else
   terraform workspace select "$ENVIRONMENT"
 fi
 
-export open_api_key="$OPEN_API_KEY"
-export ntfy_url="$NTFY_URL"
-
 # Use prod.tfvars for production environment
 if [ "$ENVIRONMENT" = "prod" ]; then
-  TF_APPLY_CMD=(terraform apply -var-file=prod.tfvars -var="project_name=$PROJECT_NAME" -var="environment=$ENVIRONMENT" -auto-approve)
+  TF_APPLY_CMD=(terraform apply -input=false -var-file=prod.tfvars -var="project_name=$PROJECT_NAME" -var="environment=$ENVIRONMENT" -auto-approve)
 else
-  TF_APPLY_CMD=(terraform apply -var="project_name=$PROJECT_NAME" -var="environment=$ENVIRONMENT" -auto-approve)
+  TF_APPLY_CMD=(terraform apply -input=false -var="project_name=$PROJECT_NAME" -var="environment=$ENVIRONMENT" -auto-approve)
 fi
 
 echo "🎯 Applying Terraform..."
